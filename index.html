@@ -82,7 +82,9 @@
             position: relative;
             z-index: 2;
             padding: 0 !important;
+            background: linear-gradient(to right, #facc15, #eab308, #ca8a04) !important;
             box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+            border-bottom: 4px solid #1d4ed8 !important;
         }
 
         .admin-header-row {
@@ -109,6 +111,38 @@
             line-height: 1.45;
             font-weight: 600;
             margin: 0;
+        }
+
+        .registration-card .registration-header-row {
+            display: grid !important;
+            grid-template-columns: 3.25rem minmax(0, 1fr);
+            align-items: center !important;
+            gap: 1rem;
+            min-height: 5.5rem;
+            padding: 0 1rem;
+            flex-wrap: nowrap !important;
+        }
+
+        .registration-card .dashboard-header-brand {
+            width: 3.25rem !important;
+            height: 3.25rem !important;
+            margin-left: 0 !important;
+            align-self: center !important;
+        }
+
+        .registration-card .dashboard-header-brand img {
+            width: 2.75rem !important;
+            height: 2.75rem !important;
+            max-width: 2.75rem !important;
+            max-height: 2.75rem !important;
+            object-fit: contain !important;
+        }
+
+        .registration-card .admin-header-text {
+            min-width: 0;
+            max-width: 100% !important;
+            padding: 1.25rem 0 !important;
+            overflow: hidden;
         }
 
         .registration-content {
@@ -162,6 +196,22 @@
             box-shadow: 0 0 0 9999px rgba(2, 6, 23, 0.52);
         }
 
+        .registration-success-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(5px);
+        }
+
+        .registration-success-modal.is-open {
+            display: flex;
+        }
+
         @media (max-width: 640px) {
             .registration-shell {
                 padding: 0.75rem;
@@ -172,25 +222,44 @@
                 border-radius: 0.9rem;
             }
 
-            .admin-header-row {
-                min-height: 4.85rem;
+            .registration-card .registration-header-row {
+                grid-template-columns: 2.75rem minmax(0, 1fr);
+                min-height: 4.85rem !important;
                 align-items: center !important;
-                gap: 0.55rem;
+                gap: 0.65rem !important;
+                padding: 0 0.75rem;
+                flex-wrap: nowrap !important;
             }
 
-            .admin-header .admin-header-text {
-                max-width: calc(100vw - 6.6rem) !important;
-                padding: 0.8rem 0.65rem !important;
+            .registration-card .dashboard-header-brand {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                min-width: 2.75rem !important;
             }
 
-            .admin-header h1 {
-                font-size: clamp(1.1rem, 5.2vw, 1.45rem);
+            .registration-card .dashboard-header-brand img {
+                width: 2.35rem !important;
+                height: 2.35rem !important;
+                max-width: 2.35rem !important;
+                max-height: 2.35rem !important;
+            }
+
+            .registration-card .admin-header .admin-header-text {
+                max-width: 100% !important;
+                padding: 0.75rem 0 !important;
+            }
+
+            .registration-card .admin-header h1 {
+                font-size: clamp(1rem, 4.6vw, 1.35rem);
+                line-height: 1.12;
                 margin-bottom: 0.3rem;
+                overflow-wrap: anywhere;
             }
 
-            .admin-header p {
-                font-size: clamp(0.72rem, 3.2vw, 0.86rem);
+            .registration-card .admin-header p {
+                font-size: clamp(0.68rem, 3vw, 0.82rem);
                 line-height: 1.35;
+                overflow-wrap: anywhere;
             }
         }
     </style>
@@ -199,7 +268,7 @@
     <main class="registration-shell mx-auto flex w-full items-center justify-center">
         <section class="registration-card">
             <div class="admin-header dashboard-header bg-yellow-400">
-                <div class="admin-header-row mb-0 flex">
+                <div class="admin-header-row registration-header-row mb-0">
                     <div class="dashboard-header-brand" aria-hidden="true">
                         <img src="Adventist_University_of_the_Philippines_logo.png" alt="">
                     </div>
@@ -242,20 +311,36 @@
                     </label>
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                         <div class="mb-3">
-                            <h2 class="text-lg font-black text-slate-950">Notarized Parent Consent</h2>
-                            <p class="text-xs font-semibold text-slate-500">Camera capture only. Gallery uploads are not accepted.</p>
+                            <h2 class="text-lg font-black text-slate-950">Parent Consent - Page 1</h2>
+                            <p class="text-xs font-semibold text-slate-500">Capture the first page using your camera.</p>
                         </div>
                         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-                            <canvas id="parentCanvas" class="hidden"></canvas>
-                            <img id="parentPreview" alt="Parent consent preview" class="camera-preview hidden w-full">
-                            <div id="parentPlaceholder" class="flex aspect-[3/4] items-center justify-center p-6 text-center text-sm font-bold text-slate-400">No parent consent photo captured yet.</div>
+                            <canvas id="parentPage1Canvas" class="hidden"></canvas>
+                            <img id="parentPage1Preview" alt="Parent consent page 1 preview" class="camera-preview hidden w-full">
+                            <div id="parentPage1Placeholder" class="flex aspect-[3/4] items-center justify-center p-6 text-center text-sm font-bold text-slate-400">No parent consent page 1 photo captured yet.</div>
                         </div>
                         <div class="mt-3 flex flex-wrap gap-2">
-                            <button type="button" data-camera-start="parent" class="rounded-xl bg-blue-700 px-4 py-2 text-sm font-black text-white hover:bg-blue-800">Open Camera</button>
-                            <button type="button" data-camera-retake="parent" class="hidden rounded-xl bg-slate-800 px-4 py-2 text-sm font-black text-white hover:bg-slate-900">Retake</button>
+                            <button type="button" data-camera-start="parentPage1" class="rounded-xl bg-blue-700 px-4 py-2 text-sm font-black text-white hover:bg-blue-800">Open Camera</button>
+                            <button type="button" data-camera-retake="parentPage1" class="hidden rounded-xl bg-slate-800 px-4 py-2 text-sm font-black text-white hover:bg-slate-900">Retake</button>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div class="mb-3">
+                            <h2 class="text-lg font-black text-slate-950">Parent Consent - Page 2</h2>
+                            <p class="text-xs font-semibold text-slate-500">Capture the second page using your camera.</p>
+                        </div>
+                        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                            <canvas id="parentPage2Canvas" class="hidden"></canvas>
+                            <img id="parentPage2Preview" alt="Parent consent page 2 preview" class="camera-preview hidden w-full">
+                            <div id="parentPage2Placeholder" class="flex aspect-[3/4] items-center justify-center p-6 text-center text-sm font-bold text-slate-400">No parent consent page 2 photo captured yet.</div>
+                        </div>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <button type="button" data-camera-start="parentPage2" class="rounded-xl bg-blue-700 px-4 py-2 text-sm font-black text-white hover:bg-blue-800">Open Camera</button>
+                            <button type="button" data-camera-retake="parentPage2" class="hidden rounded-xl bg-slate-800 px-4 py-2 text-sm font-black text-white hover:bg-slate-900">Retake</button>
                         </div>
                     </article>
 
@@ -297,6 +382,17 @@
         </div>
     </div>
 
+    <div id="successModal" class="registration-success-modal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+        <div class="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white p-6 text-center shadow-2xl sm:p-8">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-700">✓</div>
+            <h2 id="successModalTitle" class="text-2xl font-black text-slate-950">Registration Submitted</h2>
+            <p id="successModalMessage" class="mt-4 text-sm font-bold leading-relaxed text-slate-700 sm:text-base"></p>
+            <button id="closeSuccessModal" type="button" class="mt-6 w-full rounded-2xl bg-blue-700 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800 sm:w-auto sm:min-w-32">
+                Done
+            </button>
+        </div>
+    </div>
+
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -319,18 +415,32 @@
         const cameraOverlayLabel = document.getElementById("cameraOverlayLabel");
         const cancelCameraOverlay = document.getElementById("cancelCameraOverlay");
         const captureCameraOverlay = document.getElementById("captureCameraOverlay");
+        const successModal = document.getElementById("successModal");
+        const successModalMessage = document.getElementById("successModalMessage");
+        const closeSuccessModal = document.getElementById("closeSuccessModal");
+        const REGISTRATION_SUCCESS_MESSAGE = "Your registration has been submitted successfully. The CSC will review your registration. If your registration is forfeited or rejected, your team president will be notified. If you do not receive any notice from your president, your registration will be considered approved.";
         let activeCameraType = null;
         let activeCameraStream = null;
 
         const cameras = {
-            parent: {
-                canvas: document.getElementById("parentCanvas"),
-                preview: document.getElementById("parentPreview"),
-                placeholder: document.getElementById("parentPlaceholder"),
+            parentPage1: {
+                label: "Parent Consent - Page 1",
+                canvas: document.getElementById("parentPage1Canvas"),
+                preview: document.getElementById("parentPage1Preview"),
+                placeholder: document.getElementById("parentPage1Placeholder"),
+                blob: null,
+                stream: null
+            },
+            parentPage2: {
+                label: "Parent Consent - Page 2",
+                canvas: document.getElementById("parentPage2Canvas"),
+                preview: document.getElementById("parentPage2Preview"),
+                placeholder: document.getElementById("parentPage2Placeholder"),
                 blob: null,
                 stream: null
             },
             medical: {
+                label: "Medical Certificate",
                 canvas: document.getElementById("medicalCanvas"),
                 preview: document.getElementById("medicalPreview"),
                 placeholder: document.getElementById("medicalPlaceholder"),
@@ -353,6 +463,18 @@
         function clearAlert() {
             formAlert.classList.add("hidden");
             formAlert.textContent = "";
+        }
+
+        function openSuccessModal() {
+            successModalMessage.textContent = REGISTRATION_SUCCESS_MESSAGE;
+            successModal.classList.add("is-open");
+            document.body.classList.add("overflow-hidden");
+            closeSuccessModal.focus();
+        }
+
+        function closeSuccessModalFunction() {
+            successModal.classList.remove("is-open");
+            document.body.classList.remove("overflow-hidden");
         }
 
         function stopCamera(type) {
@@ -384,9 +506,7 @@
 
             try {
                 activeCameraType = type;
-                cameraOverlayLabel.textContent = type === "parent"
-                    ? "Notarized Parent Consent"
-                    : "Medical Certificate";
+                cameraOverlayLabel.textContent = camera.label || "Document Camera";
                 activeCameraStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: { ideal: "environment" },
@@ -535,8 +655,8 @@
                 return;
             }
 
-            if (!cameras.parent.blob || !cameras.medical.blob) {
-                setAlert("Please take a picture of both required documents before registering.");
+            if (!cameras.parentPage1.blob || !cameras.parentPage2.blob || !cameras.medical.blob) {
+                setAlert("Please take a picture of Parent Consent Page 1, Parent Consent Page 2, and the Medical Certificate before registering.");
                 return;
             }
 
@@ -549,7 +669,8 @@
                 const fullName = document.getElementById("fullName").value.trim();
                 const idNumber = document.getElementById("idNumber").value.trim();
                 const teamName = selectedTeam?.dataset?.name || selectedTeam?.textContent || "";
-                const parentConsentUrl = await uploadDocument(participantId, "parent-consent", cameras.parent.blob);
+                const parentConsentPage1Url = await uploadDocument(participantId, "parent-consent-page-1", cameras.parentPage1.blob);
+                const parentConsentPage2Url = await uploadDocument(participantId, "parent-consent-page-2", cameras.parentPage2.blob);
                 const medicalCertificateUrl = await uploadDocument(participantId, "medical-certificate", cameras.medical.blob);
 
                 const participantRecord = {
@@ -562,7 +683,10 @@
                     team_id: teamSelect.value || null,
                     team_name: teamName,
                     team: teamName,
-                    parent_consent_photo: parentConsentUrl,
+                    parent_consent_photo: JSON.stringify({
+                        page1: parentConsentPage1Url,
+                        page2: parentConsentPage2Url
+                    }),
                     medical_certificate_photo: medicalCertificateUrl,
                     status: "pending",
                     created_at: new Date().toISOString()
@@ -586,7 +710,8 @@
                     document.querySelector(`[data-camera-retake="${type}"]`)?.classList.add("hidden");
                 });
                 await loadTeams();
-                setAlert("Registration submitted successfully. Please wait for admin review.", "success");
+                setAlert(REGISTRATION_SUCCESS_MESSAGE, "success");
+                openSuccessModal();
             } catch (error) {
                 console.error("Registration error:", error);
                 setAlert(getRegistrationErrorMessage(error, document.getElementById("idNumber").value.trim()));
@@ -606,6 +731,17 @@
 
         captureCameraOverlay.addEventListener("click", () => capturePhoto());
         cancelCameraOverlay.addEventListener("click", () => stopCamera());
+        closeSuccessModal.addEventListener("click", closeSuccessModalFunction);
+        successModal.addEventListener("click", event => {
+            if (event.target === successModal) {
+                closeSuccessModalFunction();
+            }
+        });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && successModal.classList.contains("is-open")) {
+                closeSuccessModalFunction();
+            }
+        });
 
         window.addEventListener("beforeunload", () => {
             Object.keys(cameras).forEach(stopCamera);
