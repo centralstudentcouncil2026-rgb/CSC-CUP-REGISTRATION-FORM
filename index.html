@@ -290,7 +290,7 @@
 
                     <label class="block">
                         <span class="mb-1 block text-sm font-black text-slate-700">Course</span>
-                        <input id="course" type="text" required maxlength="120" placeholder="Example: BS-ECE" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                        <input id="course" type="text" required maxlength="120" placeholder="Example: BSIT" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                     </label>
 
                     <label class="block">
@@ -308,6 +308,38 @@
                         <select id="teamSelect" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
                             <option value="">Loading teams...</option>
                         </select>
+                    </label>
+
+                    <label class="block sm:col-span-2">
+                        <span class="mb-1 block text-sm font-black text-slate-700">You are going to play in</span>
+                        <select id="gameScopeSelect" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                            <option value="">Select game category</option>
+                            <option value="major">Major game Only</option>
+                            <option value="minor">Minor game Only</option>
+                            <option value="both">Both major and minor game</option>
+                        </select>
+                    </label>
+
+                    <label id="majorSportField" class="hidden block">
+                        <span class="mb-1 block text-sm font-black text-slate-700">Major Game</span>
+                        <select id="majorSportSelect" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                            <option value="">Select a major game</option>
+                        </select>
+                    </label>
+
+                    <label id="minorSportField" class="hidden block">
+                        <span class="mb-1 block text-sm font-black text-slate-700">Minor Game</span>
+                        <select id="minorSportSelect" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                            <option value="">Select a minor game</option>
+                        </select>
+                    </label>
+
+                    <label class="flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 sm:col-span-2">
+                        <input id="isImportCheckbox" type="checkbox" class="mt-1 h-5 w-5 rounded border-slate-300 text-blue-700 focus:ring-blue-500">
+                        <span>
+                            <span class="block text-sm font-black text-slate-800">I am an import player</span>
+                            <span class="mt-1 block text-xs font-semibold text-slate-600">Check this if you are an import. You will need to capture your Import Form with Signatures.</span>
+                        </span>
                     </label>
                 </div>
 
@@ -359,6 +391,22 @@
                             <button type="button" data-camera-retake="medical" class="hidden rounded-xl bg-slate-800 px-4 py-2 text-sm font-black text-white hover:bg-slate-900">Retake</button>
                         </div>
                     </article>
+
+                    <article id="importFormCard" class="hidden rounded-2xl border border-blue-200 bg-blue-50 p-4 lg:col-span-3">
+                        <div class="mb-3">
+                            <h2 class="text-lg font-black text-slate-950">Import Form with Signatures</h2>
+                            <p class="text-xs font-semibold text-slate-500">Required only for import players. Capture the signed import form using your camera.</p>
+                        </div>
+                        <div class="mx-auto max-w-sm overflow-hidden rounded-2xl border border-blue-200 bg-white">
+                            <canvas id="importFormCanvas" class="hidden"></canvas>
+                            <img id="importFormPreview" alt="Import form with signatures preview" class="camera-preview hidden w-full">
+                            <div id="importFormPlaceholder" class="flex aspect-[3/4] items-center justify-center p-6 text-center text-sm font-bold text-slate-400">No import form photo captured yet.</div>
+                        </div>
+                        <div class="mt-3 flex flex-wrap justify-center gap-2">
+                            <button type="button" data-camera-start="importForm" class="rounded-xl bg-blue-700 px-4 py-2 text-sm font-black text-white hover:bg-blue-800">Open Camera</button>
+                            <button type="button" data-camera-retake="importForm" class="hidden rounded-xl bg-slate-800 px-4 py-2 text-sm font-black text-white hover:bg-slate-900">Retake</button>
+                        </div>
+                    </article>
                 </div>
 
                 <button id="submitButton" type="submit" class="w-full rounded-2xl bg-gradient-to-r from-blue-800 to-blue-600 px-5 py-4 text-base font-black text-white shadow-lg shadow-blue-900/20 transition hover:from-blue-900 hover:to-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
@@ -384,7 +432,7 @@
 
     <div id="successModal" class="registration-success-modal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
         <div class="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white p-6 text-center shadow-2xl sm:p-8">
-            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-700">&#10003;</div>
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-700">✓</div>
             <h2 id="successModalTitle" class="text-2xl font-black text-slate-950">Registration Submitted</h2>
             <p id="successModalMessage" class="mt-4 text-sm font-bold leading-relaxed text-slate-700 sm:text-base"></p>
             <button id="closeSuccessModal" type="button" class="mt-6 w-full rounded-2xl bg-blue-700 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800 sm:w-auto sm:min-w-32">
@@ -399,6 +447,7 @@
         const SUPABASE_URL = "https://unveyndaaznxgqojwjki.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVudmV5bmRhYXpueGdxb2p3amtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzQyNzUsImV4cCI6MjA5NDIxMDI3NX0.2RUriqqq9kITnl8uPZSdiSrXuo8BhD9nrzqHFUwl2yU";
         const TEAMS_TABLE = "sports_leaderboard";
+        const SPORTS_TABLE = "sports";
         const PARTICIPANTS_TABLE = "participants";
         const DOCUMENTS_BUCKET = "participant-documents";
 
@@ -410,6 +459,13 @@
         const formAlert = document.getElementById("formAlert");
         const submitButton = document.getElementById("submitButton");
         const teamSelect = document.getElementById("teamSelect");
+        const gameScopeSelect = document.getElementById("gameScopeSelect");
+        const majorSportField = document.getElementById("majorSportField");
+        const majorSportSelect = document.getElementById("majorSportSelect");
+        const minorSportField = document.getElementById("minorSportField");
+        const minorSportSelect = document.getElementById("minorSportSelect");
+        const isImportCheckbox = document.getElementById("isImportCheckbox");
+        const importFormCard = document.getElementById("importFormCard");
         const cameraOverlay = document.getElementById("cameraOverlay");
         const cameraOverlayVideo = document.getElementById("cameraOverlayVideo");
         const cameraOverlayLabel = document.getElementById("cameraOverlayLabel");
@@ -421,6 +477,7 @@
         const REGISTRATION_SUCCESS_MESSAGE = "Your registration has been submitted successfully. The CSC will review your registration. If your registration is forfeited or rejected, your team president will be notified. If you do not receive any notice from your president, your registration will be considered approved.";
         let activeCameraType = null;
         let activeCameraStream = null;
+        let sportsData = [];
 
         const cameras = {
             parentPage1: {
@@ -444,6 +501,14 @@
                 canvas: document.getElementById("medicalCanvas"),
                 preview: document.getElementById("medicalPreview"),
                 placeholder: document.getElementById("medicalPlaceholder"),
+                blob: null,
+                stream: null
+            },
+            importForm: {
+                label: "Import Form with Signatures",
+                canvas: document.getElementById("importFormCanvas"),
+                preview: document.getElementById("importFormPreview"),
+                placeholder: document.getElementById("importFormPlaceholder"),
                 blob: null,
                 stream: null
             }
@@ -594,6 +659,95 @@
             `;
         }
 
+        function normalizeGameType(value) {
+            const normalized = String(value || "").trim().toLowerCase();
+            return normalized === "minor" ? "minor" : "major";
+        }
+
+        function getSportName(sport) {
+            return sport?.sport_name || sport?.name || sport?.game_name || "Unnamed game";
+        }
+
+        function renderSportSelect(select, type) {
+            const sports = sportsData
+                .filter(sport => normalizeGameType(sport.game_type || sport.sport_type || sport.category_type) === type)
+                .sort((a, b) => getSportName(a).localeCompare(getSportName(b)));
+            const label = type === "major" ? "major game" : "minor game";
+
+            select.innerHTML = `
+                <option value="">${sports.length ? `Select a ${label}` : `No ${label}s listed yet`}</option>
+                ${sports.map(sport => `
+                    <option value="${String(sport.id)}" data-name="${escapeHTML(getSportName(sport))}">
+                        ${escapeHTML(getSportName(sport))}
+                    </option>
+                `).join("")}
+            `;
+        }
+
+        function updateSportSelectionVisibility() {
+            const scope = gameScopeSelect.value;
+            const showMajor = scope === "major" || scope === "both";
+            const showMinor = scope === "minor" || scope === "both";
+
+            majorSportField.classList.toggle("hidden", !showMajor);
+            minorSportField.classList.toggle("hidden", !showMinor);
+            majorSportSelect.required = showMajor;
+            minorSportSelect.required = showMinor;
+
+            if (!showMajor) {
+                majorSportSelect.value = "";
+            }
+
+            if (!showMinor) {
+                minorSportSelect.value = "";
+            }
+        }
+
+        function resetCameraCapture(type) {
+            const camera = cameras[type];
+
+            if (!camera) {
+                return;
+            }
+
+            stopCamera(type);
+            camera.blob = null;
+            camera.preview.removeAttribute("src");
+            camera.preview.classList.add("hidden");
+            camera.placeholder.classList.remove("hidden");
+            document.querySelector(`[data-camera-retake="${type}"]`)?.classList.add("hidden");
+        }
+
+        function updateImportFormVisibility() {
+            const isImport = isImportCheckbox.checked;
+            importFormCard.classList.toggle("hidden", !isImport);
+
+            if (!isImport) {
+                resetCameraCapture("importForm");
+            }
+        }
+
+        async function loadSports() {
+            const { data, error } = await supabase
+                .from(SPORTS_TABLE)
+                .select("id, sport_name, game_type")
+                .order("sport_name", { ascending: true });
+
+            if (error) {
+                console.error("Sports load error:", error);
+                sportsData = [];
+                renderSportSelect(majorSportSelect, "major");
+                renderSportSelect(minorSportSelect, "minor");
+                setAlert("Unable to load major/minor games. Please refresh the page or contact the CSC admin.");
+                return;
+            }
+
+            sportsData = data || [];
+            renderSportSelect(majorSportSelect, "major");
+            renderSportSelect(minorSportSelect, "minor");
+            updateSportSelectionVisibility();
+        }
+
         function escapeHTML(value) {
             return String(value ?? "")
                 .replaceAll("&", "&amp;")
@@ -660,7 +814,33 @@
                 return;
             }
 
+            const isImport = isImportCheckbox.checked;
+
+            if (isImport && !cameras.importForm.blob) {
+                setAlert("Please take a picture of the Import Form with Signatures.");
+                importFormCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                return;
+            }
+
+            const gameScope = gameScopeSelect.value;
+            const requiresMajor = gameScope === "major" || gameScope === "both";
+            const requiresMinor = gameScope === "minor" || gameScope === "both";
+
+            if (requiresMajor && !majorSportSelect.value) {
+                setAlert("Please select one major game.");
+                majorSportSelect.focus();
+                return;
+            }
+
+            if (requiresMinor && !minorSportSelect.value) {
+                setAlert("Please select one minor game.");
+                minorSportSelect.focus();
+                return;
+            }
+
             const selectedTeam = teamSelect.options[teamSelect.selectedIndex];
+            const selectedMajorSport = majorSportSelect.options[majorSportSelect.selectedIndex];
+            const selectedMinorSport = minorSportSelect.options[minorSportSelect.selectedIndex];
             const participantId = getParticipantId();
             submitButton.disabled = true;
             submitButton.textContent = "Submitting registration...";
@@ -669,9 +849,14 @@
                 const fullName = document.getElementById("fullName").value.trim();
                 const idNumber = document.getElementById("idNumber").value.trim();
                 const teamName = selectedTeam?.dataset?.name || selectedTeam?.textContent || "";
+                const majorSportName = requiresMajor ? (selectedMajorSport?.dataset?.name || selectedMajorSport?.textContent || "") : "";
+                const minorSportName = requiresMinor ? (selectedMinorSport?.dataset?.name || selectedMinorSport?.textContent || "") : "";
                 const parentConsentPage1Url = await uploadDocument(participantId, "parent-consent-page-1", cameras.parentPage1.blob);
                 const parentConsentPage2Url = await uploadDocument(participantId, "parent-consent-page-2", cameras.parentPage2.blob);
                 const medicalCertificateUrl = await uploadDocument(participantId, "medical-certificate", cameras.medical.blob);
+                const importFormUrl = isImport
+                    ? await uploadDocument(participantId, "import-form-with-signatures", cameras.importForm.blob)
+                    : null;
 
                 const participantRecord = {
                     full_name: fullName,
@@ -683,6 +868,13 @@
                     team_id: teamSelect.value || null,
                     team_name: teamName,
                     team: teamName,
+                    game_scope: gameScope,
+                    major_sport_id: requiresMajor ? majorSportSelect.value : null,
+                    major_sport_name: majorSportName,
+                    minor_sport_id: requiresMinor ? minorSportSelect.value : null,
+                    minor_sport_name: minorSportName,
+                    is_import: isImport,
+                    import_form_photo: importFormUrl,
                     parent_consent_photo: JSON.stringify({
                         page1: parentConsentPage1Url,
                         page2: parentConsentPage2Url
@@ -702,14 +894,11 @@
 
                 form.reset();
                 Object.keys(cameras).forEach(type => {
-                    stopCamera(type);
-                    cameras[type].blob = null;
-                    cameras[type].preview.removeAttribute("src");
-                    cameras[type].preview.classList.add("hidden");
-                    cameras[type].placeholder.classList.remove("hidden");
-                    document.querySelector(`[data-camera-retake="${type}"]`)?.classList.add("hidden");
+                    resetCameraCapture(type);
                 });
+                updateImportFormVisibility();
                 await loadTeams();
+                await loadSports();
                 setAlert(REGISTRATION_SUCCESS_MESSAGE, "success");
                 openSuccessModal();
             } catch (error) {
@@ -729,6 +918,8 @@
             button.addEventListener("click", () => startCamera(button.dataset.cameraRetake));
         });
 
+        gameScopeSelect.addEventListener("change", updateSportSelectionVisibility);
+        isImportCheckbox.addEventListener("change", updateImportFormVisibility);
         captureCameraOverlay.addEventListener("click", () => capturePhoto());
         cancelCameraOverlay.addEventListener("click", () => stopCamera());
         closeSuccessModal.addEventListener("click", closeSuccessModalFunction);
@@ -747,7 +938,8 @@
             Object.keys(cameras).forEach(stopCamera);
         });
 
-        loadTeams();
+        updateImportFormVisibility();
+        Promise.all([loadTeams(), loadSports()]);
     </script>
 </body>
 </html>
