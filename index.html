@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             document.body.classList.add("csc-registration-page");
@@ -48,16 +47,16 @@
                 apply("b", images[0]);
 
                 window.setInterval(() => {
-                index = (index + 1) % images.length;
-                if (layer === "a") {
-                    apply("b", images[index]);
-                    document.body.classList.add("dashboard-bg-show-b");
-                    layer = "b";
-                } else {
-                    apply("a", images[index]);
-                    document.body.classList.remove("dashboard-bg-show-b");
-                    layer = "a";
-                }
+                    index = (index + 1) % images.length;
+                    if (layer === "a") {
+                        apply("b", images[index]);
+                        document.body.classList.add("dashboard-bg-show-b");
+                        layer = "b";
+                    } else {
+                        apply("a", images[index]);
+                        document.body.classList.remove("dashboard-bg-show-b");
+                        layer = "a";
+                    }
                 }, 8500);
             });
         });
@@ -78,6 +77,33 @@
         body {
             font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: transparent;
+            isolation: isolate;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: opacity 1.8s ease-in-out;
+            will-change: opacity;
+        }
+
+        body::before {
+            background-image:
+                linear-gradient(rgba(248, 250, 252, 0.42), rgba(248, 250, 252, 0.42)),
+                var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("./dashboard-background-slides.png")));
+        }
+
+        body::after {
+            background-image:
+                linear-gradient(rgba(248, 250, 252, 0.42), rgba(248, 250, 252, 0.42)),
+                var(--dashboard-photo-url-b, var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("./dashboard-background-slides.png"))));
         }
 
         body.csc-registration-page::before {
@@ -94,6 +120,13 @@
 
         body.csc-registration-page.dashboard-bg-show-b::after {
             opacity: 0.9;
+        }
+
+        body > main,
+        .camera-overlay,
+        .registration-success-modal {
+            position: relative;
+            z-index: 1;
         }
 
         h1,
