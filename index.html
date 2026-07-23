@@ -615,6 +615,7 @@
         let activeCameraType = null;
         let activeCameraStream = null;
         let sportsData = [];
+        let teamsData = [];
         let registrationSlotCounts = [];
         let isSyncingSportSlots = false;
         let isSubmittingRegistration = false;
@@ -821,16 +822,33 @@
                 return;
             }
 
-            const teams = data || [];
-            const optionsMarkup = teams.map(team => `<option value="${String(team.id)}" data-name="${escapeHTML(team.team || "")}">${escapeHTML(team.team || "Unnamed college")}</option>`).join("");
+            teamsData = data || [];
+            renderCollegeOptions();
+        }
+
+        function renderCollegeOptions() {
+            const selectedHomeCollegeId = getSelectedOptionValue(teamSelect);
+            const selectedImportCollegeId = getSelectedOptionValue(importCollegeSelect);
+            const optionsMarkup = teamsData.map(team => `<option value="${String(team.id)}" data-name="${escapeHTML(team.team || "")}">${escapeHTML(team.team || "Unnamed college")}</option>`).join("");
+            const importOptionsMarkup = teamsData
+                .filter(team => String(team.id) !== String(selectedHomeCollegeId))
+                .map(team => `<option value="${String(team.id)}" data-name="${escapeHTML(team.team || "")}">${escapeHTML(team.team || "Unnamed college")}</option>`)
+                .join("");
             teamSelect.innerHTML = `
                 <option value="">Select your home college</option>
                 ${optionsMarkup}
             `;
+            if (selectedHomeCollegeId && teamsData.some(team => String(team.id) === String(selectedHomeCollegeId))) {
+                teamSelect.value = selectedHomeCollegeId;
+            }
+
             importCollegeSelect.innerHTML = `
                 <option value="">Select the team to join</option>
-                ${optionsMarkup}
+                ${importOptionsMarkup}
             `;
+            if (selectedImportCollegeId && selectedImportCollegeId !== selectedHomeCollegeId && teamsData.some(team => String(team.id) === String(selectedImportCollegeId))) {
+                importCollegeSelect.value = selectedImportCollegeId;
+            }
         }
 
         function getSelectedOptionName(select) {
@@ -1387,6 +1405,7 @@
                 resetCameraCapture("importFormPage2");
             }
 
+            renderCollegeOptions();
             renderSportCheckboxes();
             updateSportSelectionVisibility();
             updateSubmitAvailability();
@@ -1509,6 +1528,15 @@
 
             if (isImport && !importCollegeSelect.value) {
                 setAlert("Please select the team to join as an import player.");
+                importCollegeSelect.focus();
+                return;
+            }
+
+            if (isImport && importCollegeSelect.value === teamSelect.value) {
+                setAlert("Import players must select a team to join that is different from their home college.");
+                importCollegeSelect.value = "";
+                renderCollegeOptions();
+                updateSubmitAvailability();
                 importCollegeSelect.focus();
                 return;
             }
@@ -1678,6 +1706,8 @@
         gameScopeSelect.addEventListener("change", updateSportSelectionVisibility);
         isImportCheckbox.addEventListener("change", updateImportFormVisibility);
         teamSelect.addEventListener("change", () => {
+            renderCollegeOptions();
+            updateImportFormVisibility();
             syncSportSlotAvailability();
         });
         importCollegeSelect.addEventListener("change", () => {
