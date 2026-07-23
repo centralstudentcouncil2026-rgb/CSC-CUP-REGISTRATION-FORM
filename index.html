@@ -1390,6 +1390,7 @@
         function updateSportSelectionVisibility() {
             const hasPlayableCollege = hasCurrentPlayableCollegeSelection();
             const isImport = isImportCheckbox.checked;
+            updateImportGameScopeOptions();
             gameScopeSelect.disabled = !hasPlayableCollege;
             gameScopeSelect.classList.toggle("cursor-not-allowed", !hasPlayableCollege);
             gameScopeSelect.classList.toggle("opacity-60", !hasPlayableCollege);
@@ -1420,6 +1421,21 @@
 
             enforceSportSelectionLimits();
             updateSubmitAvailability();
+        }
+
+        function updateImportGameScopeOptions() {
+            const isImport = isImportCheckbox.checked;
+
+            Array.from(gameScopeSelect.options).forEach(option => {
+                const isMinorScope = option.value === "minor" || option.value === "both";
+                option.disabled = isImport && isMinorScope;
+                option.hidden = isImport && isMinorScope;
+            });
+
+            if (isImport) {
+                gameScopeSelect.value = "major";
+                clearCheckedSports("minorSport");
+            }
         }
 
         function resetCameraCapture(type) {
@@ -1583,6 +1599,13 @@
                 renderCollegeOptions();
                 updateSubmitAvailability();
                 importCollegeSelect.focus();
+                return;
+            }
+
+            if (isImport && gameScopeSelect.value !== "major") {
+                openRuleNoticeModal("Import players are only allowed to select major games.");
+                gameScopeSelect.value = "major";
+                updateSportSelectionVisibility();
                 return;
             }
 
